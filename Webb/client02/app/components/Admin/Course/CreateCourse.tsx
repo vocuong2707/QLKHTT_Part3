@@ -8,12 +8,14 @@ import CoursePreview from "./CoursePreview"
 import { useCreateCourseMutation } from '@/redux/features/courses/coursesApi'
 import toast from 'react-hot-toast'
 import { redirect } from 'next/navigation'
+import { useLoadUserQuery } from '@/redux/features/api/apiSilce' 
 
 type Props = {}
 
 const CreateCourse = (props: Props) => {
 
     const[createCourse,{isLoading, isSuccess,error}] = useCreateCourseMutation();
+    const {data:userReload , refetch:refetchUser } = useLoadUserQuery({});
 
     const [active, setActive] = useState(0);
     const [courseInfo, setCourseInfo] = useState({
@@ -26,12 +28,14 @@ const CreateCourse = (props: Props) => {
         category: "",
         demoUrl: "",
         thumbnail: "",
+        creator:""
     })
 
     const [benefits, setBebefits] = useState([{title: ""}]);
     const [prerequisites, setPrerequisites] = useState([{title: ""}]);
     const [courseContentData, setCourseContentData] = useState([{
         videoUrl: "",
+        assignmentFile:"",
         title: "",
         description: "",
         videoSection: "Untitled Section",
@@ -67,6 +71,7 @@ const CreateCourse = (props: Props) => {
             url: link.url,
         })),
         suggestion: courseContent.suggestion,
+        assignmentFile:courseContent.assignmentFile
        }));
        //prepare ourr data object
        const data = {
@@ -83,16 +88,16 @@ const CreateCourse = (props: Props) => {
         benefits: formattedBenefits,
         prerequisites: formattedPrerequisites, // Đảm bảo mảng này có cấu trúc đúng
         courseData: formattedcourseContentData,
+        creator : userReload.user._id
        };
        setCourseData(data);
-
     };
 
 
      useEffect(() => {
         if(isSuccess){
             toast.success("Course created successfully");
-            redirect("/admin/courses");
+            redirect("/teacher/courses");
         }
         if(error){
             if("data" in error){

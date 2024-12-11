@@ -1,12 +1,12 @@
 'use client';
 
-import AdminProtected from '@/app/hooks/adminProtected';
+import TeacherProtected from '@/app/hooks/teacherProtected';
 import Heading from '@/app/Utils/Heading';
 import React from 'react';
-import AdminSidebar from '../../../components/Admin/sidebar/AdminSidebar';
-import DashboadrHero from '../../../components/Admin/DashboardHero';
+import TeacherSidebar from '../../../components/Teacher/sidebar/TeacherSidebar';
+import TeacherDashHero from '../../../components/Teacher/TeacherDashHero';
 // import CreateCourse from '../../../components/Admin/Course/CreateCourse';
-import EditCourse from '../../../components/Admin/Course/EditCourse';
+import EditCourse from '../../../components/Teacher/Course/EditCourse';
 import { useParams } from 'next/navigation'; // Import useParams từ next/navigation
 
 const Page = () => { 
@@ -21,7 +21,7 @@ const Page = () => {
 
   return (
     <div>
-      <AdminProtected>
+      <TeacherProtected>
         <Heading
           title="Học Trực Tuyến"
           description="nền tảng để học sinh học tập và nhận sự trợ giúp từ giáo viên"
@@ -29,15 +29,15 @@ const Page = () => {
         />
         <div className="flex h-[200vh]">
           <div className="1500px:w-[20%] w-1/5">
-            <AdminSidebar />
+            <TeacherSidebar />
           </div>
           <div className="w-[85%]">
-            <DashboadrHero />
+            <TeacherDashHero />
             {/* Truyền id vào component EditCourse */}
             <EditCourse id={id} />
           </div>
         </div>
-      </AdminProtected>
+      </TeacherProtected>
     </div>
   );
 };

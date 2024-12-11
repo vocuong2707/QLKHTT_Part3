@@ -57,7 +57,7 @@ const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected}) => {
   );
 };
 
-const Sidebar = () => {
+const TeacherSidebar = () => {
   const { user } = useSelector((state: any) => state.auth);
   const [logout, setlogout] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -219,55 +219,36 @@ const Sidebar = () => {
             paddingLeft={isCollapsed ? undefined : "10%"}
             className="mt-6 space-y-1"
           >
-            <Item
-              title="Dashboard"
-              to="/teacher"
-              icon={<HomeOutlinedIcon className="w-5 h-5" />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             
-            <Typography
-              variant="h5"
-              sx={{ m: "20px 0 10px 25px" }}
-              className="!text-[13px] tracking-wider uppercase font-semibold opacity-60"
-            >
-              {!isCollapsed && "Data"}
-            </Typography>
-
+            
+        
             <Item
               title="Users"
-              to="/admin/users"
+              to="/teacher/users"
               icon={<GroupsIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Invoices"
-              to="/admin/invoices"
+              to="/teacher/invoices"
               icon={<ReceiptOutlinedIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
             />
             
-            <Typography
-              variant="h5"
-              sx={{ m: "20px 0 10px 25px" }}
-              className="!text-[13px] tracking-wider uppercase font-semibold opacity-60"
-            >
-              {!isCollapsed && "Content"}
-            </Typography>
+            
             
             <Item
               title="Create Course"
-              to="/admin/create-course"
+              to="/teacher/create-course"
               icon={<VideoCallIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Live Courses"
-              to="/admin/courses"
+              to="/teacher/courses"
               icon={<OndemandVideoIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
@@ -282,60 +263,27 @@ const Sidebar = () => {
               {!isCollapsed && "Controllers"}
             </Typography>
 
-            <Item
-              title="Manage Team"
-              to="/admin/team"
-              icon={<PeopleOutlinedIcon className="w-5 h-5" />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+           
 
-            <Typography
-              variant="h5"
-              sx={{ m: "20px 0 10px 25px" }}
-              className="!text-[13px] tracking-wider uppercase font-semibold opacity-60"
-            >
-              {!isCollapsed && "Analytics"}
-            </Typography>
+          
 
-            <Item
+            {/* <Item
               title="Courses Analytics"
               to="/admin/courses-analytics"
               icon={<BarChartOutlinedIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
-            />
-            <Item
+            /> */}
+            {/* <Item
               title="Orders Analytics"
               to="/admin/orders-analytics"
               icon={<MapOutlinedIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
-            />
-            <Item
-              title="Users Analytics" 
-              to="/admin/users-analytics"
-              icon={<ManageHistoryIcon className="w-5 h-5" />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            /> */}
+          
 
-            <Typography
-              variant="h5"
-              sx={{ m: "20px 0 10px 25px" }}
-              className="!text-[13px] tracking-wider uppercase font-semibold opacity-60"
-            >
-              {!isCollapsed && "Extras"}
-            </Typography>
 
-            <Item
-              title="Settings"
-              to="/admin/settings"
-              icon={<SettingsIcon className="w-5 h-5" />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            
             <div onClick={logoutHandler} className="mt-4">
               <Item
                 title="Logout"
@@ -352,4 +300,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default TeacherSidebar;

@@ -12,7 +12,7 @@ export default function TeacherProtected({ children }: ProtectedProps) {
   const { user } = useSelector((state: any) => state.auth);
 
   if (user) {
-    const isAdmin = user?.role === "teacher";
-    return isAdmin ? children : redirect("/");
+    const isAdmin = user?.role === "Teacher";
+    return isAdmin ? children : redirect("/teacher");
   }
 }

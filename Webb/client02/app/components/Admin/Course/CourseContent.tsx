@@ -50,6 +50,21 @@ const CourseContent: FC<Props> = ({
     }
   };
 
+  const handleAssignmentFileChange = (e: any, index: number) => {
+    e.preventDefault();
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const updatedData = [...courseContentData];
+        updatedData[index].assignmentFile = reader.result as string; // Chuyển đổi file PDF thành chuỗi Base64
+        setCourseContentData(updatedData); // Lưu lại state
+      };
+      reader.readAsDataURL(file); // Đọc file dưới dạng Base64
+    }
+  };
+
+
   // hàm xử lý video
   const handleVideoFileChange = (e: any, index: number) => {
     e.preventDefault(); // Ngăn chặn hành động mặc định (nếu có)
@@ -88,11 +103,12 @@ const CourseContent: FC<Props> = ({
   const newContentHandler = (item: any) => {
     if (
       item.title === "" ||
+      item.assignmentFile ==="" ||
       item.description === "" ||
       item.videoUrl === "" ||
       item.links[0].title === "" ||
       item.links[0].url === ""
-    ) {
+      ) {
       toast.error("Please fill all the fields first");
     } else {
       let newVideoSection = "";
@@ -112,6 +128,7 @@ const CourseContent: FC<Props> = ({
         description: "",
         videoSection: newVideoSection,
         links: [{ title: "", url: "" }],
+        assignmentFile:"",
       };
       setCourseContentData([...courseContentData, newContent]);
     }
@@ -134,6 +151,7 @@ const CourseContent: FC<Props> = ({
         description: "",
         videoSection: `Untitled Section ${activeSection}`,
         links: [{ title: "", url: "" }],
+        assignmentFile:""
       };
       setCourseContentData([...courseContentData, newContent]);
     }
@@ -270,6 +288,12 @@ const CourseContent: FC<Props> = ({
                           }}
                         /> */}
                   </div>
+
+                      <div className="mb-3"> 
+                        <label className={Style.Label}>Tải bài tập (PDF)</label> 
+                        <input type="file" accept="application/pdf" className={Style.input} onChange={(e) => handleAssignmentFileChange(e, index)} /> 
+                        {item.assignmentFile && ( <p className="mt-2 text-sm text-green-600"> File đã tải: {item.assignmentFile.name} </p> )} </div>
+
                   <div className="mb-3">
                     <label className={Style.Label}>
                       Độ dài video (trong vài phút)

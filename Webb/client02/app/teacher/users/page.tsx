@@ -24,7 +24,7 @@ const page = (props: Props) => {
               <TeacherSidebar  />
             </div>
             <div className="w-[85%] ">
-              <TeacherDashHero />
+             
               <AllUsers />
             </div>
           </div>

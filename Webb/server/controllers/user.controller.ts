@@ -367,11 +367,11 @@ export const getAllUsers = CatchAsyncError(
 
 export const updateUserRole = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, role } = req.body;
+        const { id, role } = req.body;
         console.log("Dữ liệu nhận được từ frontend user", req.body);
 
         // Gọi service để cập nhật vai trò người dùng
-        const updatedUser = await updateUserRoleService(email, role);
+        const updatedUser = await updateUserRoleService(id, role);
         
         // Trả về kết quả đã cập nhật
         console.log("Dữ liệu lưu được", updatedUser);

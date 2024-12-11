@@ -1,10 +1,10 @@
 'use client'
-import AdminProtected from '@/app/hooks/adminProtected'
+import TeacherProtected from '@/app/hooks/teacherProtected'
 import Heading from '@/app/Utils/Heading'
 import React from 'react'
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
-import DashboadrHero from "../../components/Admin/DashboardHero";
-import AllCourse from "../../components/Admin/Course/AllCourse"
+import DashboadrHero from "../../components/Teacher/TeacherDashHero";
+import AllCourse from "../../components/Teacher/Course/AllCourse"
+import TeacherSidebar from '@/app/components/Teacher/sidebar/TeacherSidebar';
 
 type Props = {}
 
@@ -12,7 +12,7 @@ const page = (props: Props) => {
 
     return ( 
         <div>
-        <AdminProtected>
+        <TeacherProtected>
           <Heading
             title="Học Trực Tuyến"
             description="nền tảng để học sinh học tập và nhận sự trợ giúp từ giáo viên"
@@ -20,14 +20,14 @@ const page = (props: Props) => {
           />
           <div className="flex h-screen">
             <div className="1500px:w-[20%] w-1/5">
-              <AdminSidebar />
+              <TeacherSidebar />
             </div>
             <div className="w-[85%] ">
               <DashboadrHero />
               <AllCourse />
             </div>
           </div>
-        </AdminProtected>
+        </TeacherProtected>
       </div>
     )
 }

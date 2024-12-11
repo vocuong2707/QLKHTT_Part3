@@ -4,8 +4,8 @@ import { authorizaRoles, isAutheticated } from "../middleware/auth";
 import { updateAccessToken } from "../controllers/user.controller";
 
 const courseRouter = express.Router();
-courseRouter.post("/create-course",updateAccessToken,isAutheticated,authorizaRoles("admin"),uploadCourse);
-courseRouter.put("/edit-course/:id",updateAccessToken,isAutheticated,authorizaRoles("admin"),editCourse);
+courseRouter.post("/create-course",updateAccessToken,isAutheticated,authorizaRoles("Teacher"),uploadCourse);
+courseRouter.put("/edit-course/:id",updateAccessToken,isAutheticated,authorizaRoles("Teacher"),editCourse);
 courseRouter.get("/get-course/:id",getSingleCourse);
 courseRouter.get("/get-courses",getAllCourse);
 courseRouter.get("/get-course-content/:id",updateAccessToken,isAutheticated    ,getCourseByUser);

@@ -2,9 +2,9 @@
 
 import React from 'react'
 import CreateCourse from "../../components/Admin/Course/CreateCourse"
-import AdminProtected from '@/app/hooks/adminProtected';
+import TeacherProtected from '@/app/hooks/teacherProtected';
 import Heading from '@/app/Utils/Heading';
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
+import TeacherSidebar from "../../components/Teacher/sidebar/TeacherSidebar";
 import DashboadrHero from "../../components/Admin/DashboardHeader";
 
 type Props = {}
@@ -12,7 +12,7 @@ type Props = {}
 const page = (props: Props) => {
     return (
       <div>
-        <AdminProtected>
+        <TeacherProtected>
           <Heading
             title="Học Trực Tuyến"
             description="nền tảng để học sinh học tập và nhận sự trợ giúp từ giáo viên"
@@ -20,14 +20,14 @@ const page = (props: Props) => {
           />
           <div className="flex h-[200vh]">
             <div className="1500px:w-[20%] w-1/5">
-              <AdminSidebar />
+              <TeacherSidebar />
             </div>
             <div className="w-[85%] ">
               <DashboadrHero />
               <CreateCourse />
             </div>
           </div>
-        </AdminProtected>
+        </TeacherProtected>
       </div>
     );
   };

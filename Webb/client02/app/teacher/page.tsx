@@ -4,6 +4,7 @@ import Heading from "../Utils/Heading";
 import TeacherSidebar from "../components/Teacher/sidebar/TeacherSidebar"
 import TeacherDashHero from "../components/Teacher/TeacherDashHero"
 import TeacherProtected from "../hooks/teacherProtected";
+import AllUsers from "../components/Teacher/Users/AllUsers";
 
 type Props = {};
 
@@ -21,7 +22,8 @@ const page = (props: Props) => {
             <TeacherSidebar />
           </div>
           <div className="w-[85%] ">
-            <TeacherDashHero isDashboard ={true} />
+            {/* <TeacherDashHero isDashboard ={true} /> */}
+            <AllUsers />
           </div>
         </div>
       </TeacherProtected>

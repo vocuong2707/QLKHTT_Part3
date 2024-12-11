@@ -1,6 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IUser } from "./user.model";
-
 interface IComment extends Document {
     user:IUser,
     question:string,
@@ -42,8 +41,7 @@ interface ICourceData extends Document {
     suggestion : string,
     comments:IComment[],
     questions:IComment[],
-
-
+    assignmentFile:string
 }
 
  interface ICourse extends Document {
@@ -61,7 +59,10 @@ interface ICourceData extends Document {
     reviews: IReview[],
     courseData : ICourceData[],
     ratings?: number;
-    purchased : number
+    purchased : number,
+    isApprove : boolean,
+    creator : IUser,
+    registeredUsers: IUser[],
 }
 
 const reviewSchema = new Schema<IReview>({
@@ -100,7 +101,8 @@ const courseDataSchema = new Schema<ICourceData>({
     description:String,
     links:[linkSchema],
     questions:[commentSchema],
-    suggestion:String
+    suggestion:String,
+    assignmentFile:String
 },{timestamps:true});
 
 
@@ -152,14 +154,25 @@ const courseSchema = new Schema<ICourse>({
     }],
     reviews: [reviewSchema],
     courseData: [courseDataSchema],
+    registeredUsers:[Object],
     ratings: {
         type:Number,
         default:0,
     },
     purchased: {
         type: Number,
-        default:1
+        default:0
+    },
+    isApprove :  {
+        type:Boolean,
+        default : false
+
+    },
+    creator : {
+        type:Object,
+        required:true
     }
+  
 },{timestamps:true})
 
 const CourseModel : Model<ICourse> = mongoose.model("Course",courseSchema);

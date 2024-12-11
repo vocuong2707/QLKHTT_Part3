@@ -38,11 +38,11 @@ export const getAllUsersService = async(res:Response)=>{
 //     }
 // }
 // Service xử lý cập nhật vai trò người dùng trong cơ sở dữ liệu
-export const updateUserRoleService = async (email: string, role: string) => {
+export const updateUserRoleService = async (id: string, role: string) => {
     try {
         // Cập nhật vai trò người dùng trong cơ sở dữ liệu
         const user = await userModel.findOneAndUpdate(
-            { email: email },  // Tìm người dùng theo email
+            { _id: id },  // Tìm người dùng theo email
             { role: role },     // Cập nhật vai trò
             { new: true }       // Trả về bản ghi mới sau khi cập nhật
         );

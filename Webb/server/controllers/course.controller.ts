@@ -42,7 +42,6 @@ import { title } from "process";
 export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
-  
       // Xử lý thumbnail
       const thumbnail = data.thumbnail;
       if (thumbnail) {
@@ -55,6 +54,9 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
         };
       }
       console.log("data course thumbnail: ",data.level);
+
+     
+
       const demoUrl = data.demoUrl;
       if (demoUrl) {
         const myCloud = await cloudinary.v2.uploader.upload(demoUrl, {
@@ -69,11 +71,15 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
       const dataCourses = data.courseData;
 
       const dataArrayVideo = [];
+      const assignmentFiles = [];
+
+      
       if(dataCourses) {
-        console.log("test: " , dataArrayVideo);
-        
+       
         for (let index = 0; index < data.courseData.length; index++) {
-            const videoUrl = dataCourses[index].videoUrl; // Nếu videoUrl là URL, thay đổi theo cấu trúc dữ liệu của bạn
+            const videoUrl = dataCourses[index].videoUrl || ""; // Nếu videoUrl là URL, thay đổi theo cấu trúc dữ liệu của bạn
+            const assignmentFile = dataCourses[index].assignmentFile || ""; // Nếu videoUrl là URL, thay đổi theo cấu trúc dữ liệu của bạn
+
             if (videoUrl) {
                 try {
                     // Upload video lên Cloudinary
@@ -81,11 +87,21 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
                         folder: "videos",
                         resource_type: "video" // Đảm bảo rằng Cloudinary nhận diện đây là video
                     });
+                    const myCloud1 = await cloudinary.v2.uploader.upload(assignmentFile, {
+                            folder: "assignmentFiles/",
+                             resource_type: "raw", // Sử dụng "raw" để upload các file không phải ảnh/video
+                    });
     
                     // Thêm URL video đã upload vào mảng
                     dataArrayVideo.push(myCloud.secure_url);
+                    assignmentFiles.push(myCloud1.secure_url);
+
                     data.courseData[index].videoUrl = dataArrayVideo[index]
+                    data.courseData[index].assignmentFile = assignmentFiles[index]
+
                     console.log("Video uploaded: ", myCloud.secure_url);
+                    console.log("Video assignmentFile: ", myCloud1.secure_url);
+
                 } catch (error:any) {
                     console.error("Error uploading video: ", error.message);
                 }
