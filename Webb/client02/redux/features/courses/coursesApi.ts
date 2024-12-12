@@ -93,10 +93,18 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    addUserToCourse: builder.mutation({
+      query: ({ courseId, userId }) => ({
+        url: `add-user-to-course/${courseId}`,
+        method: "POST",
+        body: { userId }, // Gửi userId trong body
+        credentials: "include" as const,
+      }),
+    }),
   }),
 
 });
 
 export const { useCreateCourseMutation, useGetAllCoursesQuery, useDeleteCoursesMutation, useEditCoursesMutation,
   useGetUserAllCoursesQuery, useGetCoursesDetailsQuery, useGetCoursesContentQuery, useAddNewQuestionMutation,
-  useAddAnswerInQuestionMutation, useAddReviewInCourseMutation, useAddReplyInReviewMutation } = courseApi;
+  useAddAnswerInQuestionMutation, useAddReviewInCourseMutation, useAddReplyInReviewMutation,useAddUserToCourseMutation } = courseApi;

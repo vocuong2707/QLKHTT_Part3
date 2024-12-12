@@ -62,7 +62,7 @@ interface ICourceData extends Document {
     purchased : number,
     isApprove : boolean,
     creator : IUser,
-    registeredUsers: IUser[],
+    registeredUsers: Array<{userId:string}>;
 }
 
 const reviewSchema = new Schema<IReview>({
@@ -154,7 +154,10 @@ const courseSchema = new Schema<ICourse>({
     }],
     reviews: [reviewSchema],
     courseData: [courseDataSchema],
-    registeredUsers:[Object],
+    registeredUsers:[  {
+        userId: String,
+
+    }],
     ratings: {
         type:Number,
         default:0,

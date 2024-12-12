@@ -14,6 +14,7 @@ import NotificationModel from "../models/notification.model";
 import { getAllUsersService } from "../services/user.service";
 import axios from "axios";
 import { title } from "process";
+import userModel from "../models/user.model";
 
 // export const uploadCourse = CatchAsyncError(async(req:Request , res:Response,next:NextFunction)=> {
 //     try {
@@ -642,4 +643,41 @@ export const generateVideoUrl = CatchAsyncError(async(req:Request , res:Response
         return next(new ErrorHandler(error.message,400))
 
     }
-})
+});
+
+
+export const addUserToCourse = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params; // Lấy courseId từ params
+    const { userId } = req.body; // Lấy userId từ body
+    console.log("Add User To Course Response:", id);
+    console.log("Add User To Course Response:", userId);
+
+    // Tìm khóa học
+    const course = await CourseModel.findById(id);
+
+    const user = await userModel.findById(userId)
+    console.log("course: ",course)
+    console.log("user: ",course)
+
+    if (!course) {
+        return next(new ErrorHandler("Course not found", 404));
+    }
+
+    // Kiểm tra nếu user đã được thêm vào khóa học
+    const isAlreadyRegistered = course.registeredUsers.some(
+        (user: any) => user._id.toString() === id
+    );
+
+    if (isAlreadyRegistered) {
+        return next(new ErrorHandler("User is already registered in this course", 400));
+    }
+
+    // Thêm user vào registeredUsers
+    course.registeredUsers.push(user);
+    await course.save();
+
+    res.status(200).json({
+        success: true,
+        message: "User successfully added to the course.",
+    });
+});

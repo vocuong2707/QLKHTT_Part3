@@ -1,5 +1,5 @@
 import express from "express";
-import { editCourse, uploadCourse,getSingleCourse, getAllCourse, getCourseByUser, addQuestion, addAnswer, addReview, addReplyToReview, deleteCourse, getAdminAllCourses, generateVideoUrl } from "../controllers/course.controller";
+import { editCourse, uploadCourse,getSingleCourse, getAllCourse, getCourseByUser, addQuestion, addAnswer, addReview, addReplyToReview, deleteCourse, getAdminAllCourses, generateVideoUrl, addUserToCourse } from "../controllers/course.controller";
 import { authorizaRoles, isAutheticated } from "../middleware/auth";
 import { updateAccessToken } from "../controllers/user.controller";
 
@@ -17,6 +17,6 @@ courseRouter.get("/get-admin-courses", getAdminAllCourses);
 courseRouter.post("/getVdoCipherOTP"  ,generateVideoUrl);
 
 courseRouter.put("/delete-course/:id",updateAccessToken,isAutheticated  ,authorizaRoles("Teacher")  ,deleteCourse);
-
+courseRouter.post("/add-user-to-course/:id", updateAccessToken,isAutheticated, addUserToCourse);
 
 export default courseRouter;

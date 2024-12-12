@@ -1,20 +1,17 @@
-import { Style } from "@/app/style/stylelogin";
-import { useLoadUserQuery } from "@/redux/features/api/apiSilce";
-import { useCreateOrderMutation } from "@/redux/features/orders/ordersApi";
-import {
-  LinkAuthenticationElement,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
-import { redirect } from "next/navigation";
+'use client';
+
 import React, { useEffect, useState } from "react";
+import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
 import socketIO from "socket.io-client";
+import { useCreateOrderMutation } from "@/redux/features/orders/ordersApi";
+import { useAddUserToCourseMutation } from "@/redux/features/courses/coursesApi"; // Import hook mới
+import { Style } from "@/app/style/stylelogin";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "http://localhost:8000";
 const socketId = socketIO(ENDPOINT, {
-    transports: ["websocket"]  // Sử dụng WebSocket transport
+  transports: ["websocket"], // Sử dụng WebSocket transport
 });
 
 type Props = {
@@ -23,49 +20,57 @@ type Props = {
   user: any;
 };
 
-const ChekOutForm = ({ setOpen, data,user }: Props) => {
+const ChekOutForm = ({ setOpen, data, user }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [message, setMessage] = useState<any>("");
-  const [loadUser, setLoadUser] = useState(false);
-  const {} = useLoadUserQuery({ skip: loadUser ? false : true });
+  const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [createOrder, { data: orderData, error , }] = useCreateOrderMutation();
+  const [createOrder, { data: orderData, error }] = useCreateOrderMutation();
+  const [addUserToCourse] = useAddUserToCourseMutation(); // Hook để thêm user vào khóa học
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!stripe || !elements) {
       return;
     }
+
     setIsLoading(true);
+
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: "if_required",
     });
+
     if (error) {
-      setMessage(error.message);
+      setMessage(error.message || "An unexpected error occurred.");
       setIsLoading(false);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
-      setIsLoading(false);
-      createOrder({ courseId: data._id, paymet_info: paymentIntent });
+      try {
+        const orderResponse = await createOrder({
+          courseId: data._id,
+          payment_info: paymentIntent,
+        });
 
+        if ("data" in orderResponse) {
+          // Thêm user vào khóa học
+          await addUserToCourse({ courseId: data._id, userId: user._id });
+          toast.success("Payment successful! Access granted to the course.");
+          redirect(`/course-access/${data._id}`);
+        }
+      } catch (error) {
+        console.error("Error adding user to course:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    if (orderData) {
-      setLoadUser(true);
-      redirect(`/course-access/${data._id}`);
-    }
     if (error) {
-      if ("data" in error) {
-        const errorMessage = error as any;
-        toast.error(errorMessage.data.message);
-      }
+      const errorMessage = (error as any)?.data?.message || "Failed to create order.";
+      toast.error(errorMessage);
     }
-  }, [orderData, error]);
-
-
+  }, [error]);
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
@@ -76,7 +81,6 @@ const ChekOutForm = ({ setOpen, data,user }: Props) => {
           {isLoading ? "Paying..." : "Pay now"}
         </span>
       </button>
-      {/* Hiển thị bất kỳ thông báo lỗi hoặc thành công nào */}
       {message && (
         <div id="payment-message" className="text-[red]">
           {message}

@@ -54,17 +54,23 @@ export const userApi = apiSlice.injectEndpoints({
               credentials: "include" as const, // Đảm bảo gửi cookie cùng request
             }),
           }),
-          getAllUserByCourse: builder.mutation({
+          getAllUserByCourse: builder.query({
             query: (id) => ({
               url: `get-users-by-course/${id}`,
-              method: "POST",
+              method: "GET",
               credentials: "include" as const, // Đảm bảo gửi cookie cùng request
             }),
+          }),          
+          getUsersByIds: builder.mutation({
+            query: (ids) => ({
+              url: "get-users-by-ids",
+              method: "POST",
+              body: { ids },
+              credentials: "include" as const,
+            }),
           }),
-          
-          
     })
 });
 
 export const {useUpdateAvatarMutation, useEditProfileMutation, 
-    useUpdatePasswordMutation,useGetAllUsersQuery,useUpdateUsersRoleMutation,useDeleteUsersMutation,useGetAllUserByCourseMutation } = userApi;
+    useUpdatePasswordMutation,useGetAllUsersQuery,useUpdateUsersRoleMutation,useDeleteUsersMutation,useGetAllUserByCourseQuery,useGetUsersByIdsMutation } = userApi;

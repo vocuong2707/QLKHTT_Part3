@@ -414,19 +414,27 @@ export const deleteUser = CatchAsyncError(async(req:Request,res:Response,next:Ne
 
 export const getAllUserByCourse = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=> {
     try {
+        
         const {id} = req.params;
         const course = await CourseModel.findById(id);
-        console.log('====================================');
-        console.log("course: " , course);
-        console.log('====================================');
-
+       
         
         res.status(200).json({
-            success:true,
-            messgae:"User deleted successfully"
+           success:true,
+        course
         })
     } catch (error:any) {
         return next(new ErrorHandler(error.message,400))
 
     }
 })
+
+export const getUsersByIds = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { ids } = req.body; // Nhận danh sách userId từ body
+      const users = await userModel.find({ _id: { $in: ids } }); // Lấy tất cả người dùng khớp với danh sách _id
+      res.status(200).json({ success: true, users });
+    } catch (error:any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
