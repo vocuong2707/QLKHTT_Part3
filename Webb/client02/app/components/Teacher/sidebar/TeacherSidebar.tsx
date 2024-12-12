@@ -221,11 +221,10 @@ const TeacherSidebar = () => {
           >
             
             
-        
             <Item
-              title="Users"
-              to="/teacher/users"
-              icon={<GroupsIcon className="w-5 h-5" />}
+              title="Live Courses"
+              to="/teacher/courses"
+              icon={<OndemandVideoIcon className="w-5 h-5" />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -246,13 +245,7 @@ const TeacherSidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Live Courses"
-              to="/teacher/courses"
-              icon={<OndemandVideoIcon className="w-5 h-5" />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            
 
 
             <Typography

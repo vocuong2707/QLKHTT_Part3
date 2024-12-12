@@ -53,7 +53,6 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
           url: myCloud.secure_url
         };
       }
-      console.log("data course thumbnail: ",data.level);
 
      
 
@@ -66,7 +65,6 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
         data.demoUrl =  myCloud.secure_url
 
       }
-      console.log("data course thumbnail: ",data.demoUrl);
 
       const dataCourses = data.courseData;
 
@@ -88,9 +86,11 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
                         resource_type: "video" // Đảm bảo rằng Cloudinary nhận diện đây là video
                     });
                     const myCloud1 = await cloudinary.v2.uploader.upload(assignmentFile, {
-                            folder: "assignmentFiles/",
-                             resource_type: "raw", // Sử dụng "raw" để upload các file không phải ảnh/video
-                    });
+                        folder: "assignmentFiles/",
+                        resource_type: "auto", // Hoặc 'auto'
+                        public_id: "assignment_" + Date.now(), // Đặt tên duy nhất
+                        format: "pdf", // Gán định dạng PDF
+                      });
     
                     // Thêm URL video đã upload vào mảng
                     dataArrayVideo.push(myCloud.secure_url);
@@ -99,7 +99,6 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
                     data.courseData[index].videoUrl = dataArrayVideo[index]
                     data.courseData[index].assignmentFile = assignmentFiles[index]
 
-                    console.log("Video uploaded: ", myCloud.secure_url);
                     console.log("Video assignmentFile: ", myCloud1.secure_url);
 
                 } catch (error:any) {
@@ -109,7 +108,6 @@ export const uploadCourse = CatchAsyncError(async (req: Request, res: Response, 
         }
       }
       // Xử lý video
-      console.log("data course videoUrl: ",data);
 
         createCourse(data,res,next);
       // Tạo khóa học và lưu vào cơ sở dữ liệu
@@ -135,7 +133,6 @@ export const editCourse = CatchAsyncError(async (req: Request, res: Response, ne
     try {
         const data = req.body;
         const thumbnail = data.thumbnail;
-
         // Kiểm tra nếu thumbnail có giá trị
         if (thumbnail) {
             // Kiểm tra nếu public_id tồn tại trong thumbnail trước khi gọi destroy
@@ -160,11 +157,13 @@ export const editCourse = CatchAsyncError(async (req: Request, res: Response, ne
         }
 
         const demoUrl = data.demoUrl;
+
       if (demoUrl) {
 
             if (demoUrl) {
                 // Xóa ảnh cũ trên Cloudinary
                 await cloudinary.v2.uploader.destroy(demoUrl);
+
             }
 
         const myCloud = await cloudinary.v2.uploader.upload(demoUrl, {
@@ -174,14 +173,13 @@ export const editCourse = CatchAsyncError(async (req: Request, res: Response, ne
         data.demoUrl =  myCloud.secure_url
 
       }
-      console.log("data course thumbnail: ",data.demoUrl);
 
       const dataArrayVideo = [];
+      const assignmentFiles = [];
+
       const dataCourses = data.courseData;
 
-      if(dataCourses) {
-        console.log("test: " , dataArrayVideo);
-        
+      if(dataCourses) {        
         for (let index = 0; index < data.courseData.length; index++) {
             const videoUrl = dataCourses[index].videoUrl; // Nếu videoUrl là URL, thay đổi theo cấu trúc dữ liệu của bạn
             if (videoUrl) {
@@ -189,31 +187,59 @@ export const editCourse = CatchAsyncError(async (req: Request, res: Response, ne
 
                     if (videoUrl) {
                         // Xóa ảnh cũ trên Cloudinary
-                        await cloudinary.v2.uploader.destroy(videoUrl);
+                        await cloudinary.v2.uploader.destroy(videoUrl);                    
                     }
                     // Upload video lên Cloudinary
                     const myCloud = await cloudinary.v2.uploader.upload(videoUrl, {
                         folder: "videos",
                         resource_type: "video" // Đảm bảo rằng Cloudinary nhận diện đây là video
                     });
-    
                     // Thêm URL video đã upload vào mảng
                     dataArrayVideo.push(myCloud.secure_url);
                     data.courseData[index].videoUrl = dataArrayVideo[index]
-                    console.log("Video uploaded: ", myCloud.secure_url);
                 } catch (error:any) {
                     console.error("Error uploading video: ", error.message);
                 }
             }
         }
       }
+      if(dataCourses) {        
+        for (let index = 0; index < data.courseData.length; index++) {
+            const assignmentFile = dataCourses[index].assignmentFiles; // Nếu videoUrl là URL, thay đổi theo cấu trúc dữ liệu của bạn
+            if (assignmentFile) {
+                try {
 
+                    if (assignmentFile) {
+                        // Xóa ảnh cũ trên Cloudinary
+                        await cloudinary.v2.uploader.destroy(assignmentFile);                    
+                    }
+                    // Upload video lên Cloudinary
+                    const myCloud = await cloudinary.v2.uploader.upload(assignmentFile, {
+                        folder: "assignmentFiles/",
+                        resource_type: "auto", // Hoặc 'auto'
+                        public_id: "assignment_" + Date.now(), // Đặt tên duy nhất
+                        format: "pdf", // Gán định dạng PDF
+                      });
+                    console.log("assignmentFile: " , assignmentFile);
+                    
+                    // Thêm URL video đã upload vào mảng
+                    assignmentFiles.push(myCloud.secure_url);
+                    data.courseData[index].assignmentFile = dataArrayVideo[index]
+                } catch (error:any) {
+                    console.error("Error uploading video: ", error.message);
+                }
+            }
+        }
+      }
+      console.log("data course thumbnail: ",data);
         const courseId = req.params.id;
         // Cập nhật course trong database với dữ liệu mới
         const course = await CourseModel.findByIdAndUpdate(courseId, {
             $set: data
         }, { new: true });
-
+        console.log('====================================');
+        console.log("Courses late update: " , course);
+        console.log('====================================');
         // Trả về dữ liệu course sau khi cập nhật
         res.status(200).json({
             success: true,
@@ -332,7 +358,6 @@ export const addQuestion = CatchAsyncError(async(req:Request,res:Response,next:N
 
         // add this question to our course content
         courseContent.questions.push(newQuestion);
-        console.log("course titlie: " , courseContent);
         
         await NotificationModel.create({
             user:req.user?._id,
@@ -501,7 +526,6 @@ interface IAddReviewData {
 export const addReplyToReview = CatchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { comment, courseId, reviewId } = req.body as IAddReviewData;
-        console.log("dữ liệu font end" ,req.body);
         
         // Kiểm tra xem user đã được xác thực chưa
         if (!req.user) {

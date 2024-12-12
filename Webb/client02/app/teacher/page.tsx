@@ -5,7 +5,7 @@ import TeacherSidebar from "../components/Teacher/sidebar/TeacherSidebar"
 import TeacherDashHero from "../components/Teacher/TeacherDashHero"
 import TeacherProtected from "../hooks/teacherProtected";
 import AllUsers from "../components/Teacher/Users/AllUsers";
-
+import AllCourse from "../components/Teacher/Course/AllCourse";
 type Props = {};
 
 const page = (props: Props) => {
@@ -23,7 +23,7 @@ const page = (props: Props) => {
           </div>
           <div className="w-[85%] ">
             {/* <TeacherDashHero isDashboard ={true} /> */}
-            <AllUsers />
+            <AllCourse />
           </div>
         </div>
       </TeacherProtected>

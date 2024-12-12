@@ -11,6 +11,7 @@ import { redis } from "../utils/redis";
 import {accessTokenOptions, refreshTokenOptions, sendToken} from '../utils/jwt';
 import { getAllUsersService, getUserById, updateUserRoleService } from "../services/user.service";
 import cloudinary from "cloudinary"
+import CourseModel from "../models/source.model";
 // register user
 interface IRegistrationBody {
     name:string,
@@ -351,6 +352,9 @@ export const getAllUsers = CatchAsyncError(
     }
 );
 
+
+
+
 // / update user roles --only for admin
 // export const updateUserRole = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=> {
 //     try {
@@ -398,6 +402,25 @@ export const deleteUser = CatchAsyncError(async(req:Request,res:Response,next:Ne
 
         await user.deleteOne({id});
         await redis.del(id);
+        res.status(200).json({
+            success:true,
+            messgae:"User deleted successfully"
+        })
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message,400))
+
+    }
+})
+
+export const getAllUserByCourse = CatchAsyncError(async(req:Request,res:Response,next:NextFunction)=> {
+    try {
+        const {id} = req.params;
+        const course = await CourseModel.findById(id);
+        console.log('====================================');
+        console.log("course: " , course);
+        console.log('====================================');
+
+        
         res.status(200).json({
             success:true,
             messgae:"User deleted successfully"

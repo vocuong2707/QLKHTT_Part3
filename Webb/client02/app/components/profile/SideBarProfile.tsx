@@ -85,7 +85,7 @@ const SideBarProfile:FC<Props> = ({user, active,avatar,setActive,logOutHandler})
                 <Link href={"/teacher"}
                  className={`w-full flex items-center px-3 py-4 cursor-pointer
                     ${active === 6 ? "dark:bg-slate-800 bg-white " : "bg-transparent" } `}
-                    onClick={() => setActive(1)}
+                    onClick={() => setActive(4)}
                     >
                    
                     <MdOutlineAdminPanelSettings size={25} className="dark:text-white text-black" />

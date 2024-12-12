@@ -88,7 +88,7 @@ const CourseContentMedia = ({
   ] = useAddReplyInReviewMutation();
 
   const course = courseData?.course;
-
+  console.log("Course: " , course)
 
   const isReviewExists = course?.reviews?.find(
     (item: any) => item.user._id === user._id
@@ -248,6 +248,26 @@ const CourseContentMedia = ({
         title={data[activeVideo]?.title}
         videoUrl={data[activeVideo]?.videoUrl}
       />
+
+<div className="mb-3">
+  <label className={Style.Label}>File bài tập (PDF)</label>
+  {data[activeVideo]?.assignmentFile ? (
+    <div className="mt-2">
+      <a
+        href={`${data[activeVideo]?.assignmentFile}/format/pdf`} // Thêm transformation định dạng PDF
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-500 underline"
+      >
+        Xem bài tập PDF
+      </a>
+    </div>
+  ) : (
+    <p className="text-gray-500">Chưa có file bài tập.</p>
+  )}
+</div>
+
+
       <div className="w-full flex items-center justify-between my-3">
         <div
           className={`${
@@ -320,7 +340,23 @@ const CourseContentMedia = ({
               </a>
             </div>
           ))}
+            {data[activeVideo]?.assignment && (
+              <div className="mt-5">
+                <h2 className="text-[20px] font-bold text-black dark:text-white">
+                  Bài tập:
+                </h2>
+                <a
+                  href={data[activeVideo]?.assignment.fileUrl}
+                  className="text-[#4395c4] md:text-[18px] underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {data[activeVideo]?.assignment.title}
+                </a>
+              </div>
+            )}
         </div>
+        
       )}
       {/* {activeBar === 2 && (
         <>

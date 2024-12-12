@@ -17,20 +17,23 @@ const CourseInformat: FC<Props> = ({
 }) => {
   const [dragging, setDragging] = useState(false);
 
-  const { data } = useGetHeroDataQuery("Categories", {});
+  const { data:categoriesReload } = useGetHeroDataQuery("Categories", {});
+  const { data:levelsReload } = useGetHeroDataQuery("Levels", {});
 
   const [categories, setCategories] = useState([]);
+  const [levels, setLevels] = useState([]);
+
 
   useEffect(() => {
-    if (data) {
-      setCategories(data.layout.categories);
+    if (categoriesReload) {
+      setCategories(categoriesReload.layout.categories);
     }
-  }, [data]);
+    if(levelsReload) {
+      setLevels(levelsReload.layout.levels);
+
+    }
+  }, [categoriesReload,levelsReload]);
   
-
-
-
-
 
 
   const handleSubmit = (e: any) => {
@@ -40,6 +43,7 @@ const CourseInformat: FC<Props> = ({
 
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];
+   
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -48,6 +52,21 @@ const CourseInformat: FC<Props> = ({
       reader.readAsDataURL(file); // Sử dụng readAsDataURL để hiển thị ảnh
     }
   };
+
+  const handleFileChangDemoUrl = (e:any) => {
+    const file = e.target.files?.[0]; // Lấy tệp đầu tiên trong danh sách tệp
+    console.log("File", file);
+    
+    if(file) {
+      const reader = new FileReader();
+      reader.onload= ()=> {
+       
+        setCourseInfo({...courseInfo,demoUrl:reader.result})
+      }
+      reader.readAsDataURL(file); // Đọc tệp video dưới dạng Data URL
+
+    }
+  }
 
   const handleDragOver = (e: any) => {
     e.preventDefault();
@@ -206,33 +225,36 @@ const CourseInformat: FC<Props> = ({
         <div className="w-full flex justify-between">
           <div className="w-[45%]">
             <label className={`${Style.Label}`}>Cấp độ khoá học</label>
-            <input
-              type="text"
-              name=""
-              required
-              value={courseInfo.level}
-              onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo, level: e.target.value })
-              }
-              id="level"
-              placeholder="Beginner/Intermediate/Expert"
+            <select name=""
+             id=""
               className={`${Style.input}`}
-            />
+              value={courseInfo.level}
+              onChange={(e :any) => setCourseInfo({...courseInfo, level: e.target.value})}
+              >
+              <option value="" className={Style.option}>
+                Chọn danh mục
+              </option>
+              {levels.map((item: any) => (
+                <option
+                  value={item.levelName}
+                  key={item._id}
+                  className={Style.option}
+                >
+                  {item.levelName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="w-[50%]">
             <label className={`${Style.Label} w-[50%]`}>thử nghiệm URL</label>
-            <input
-              type="text"
-              name=""
-              required
-              value={courseInfo.demoUrl}
-              onChange={(e: any) =>
-                setCourseInfo({ ...courseInfo, demoUrl: e.target.value })
-              }
-              id="demoUrl"
-              placeholder="eer74fd"
-              className={`${Style.input}`}
-            />
+             <input
+                      type="file"
+                      accept="video/*"
+                      id={courseInfo.demoUrl}
+                      className={Style.input}
+                      onChange={(e)=>handleFileChangDemoUrl(e)}
+                  />
+                  
           </div>
         </div>
         <br />

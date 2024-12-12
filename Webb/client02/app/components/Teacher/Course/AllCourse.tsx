@@ -65,6 +65,22 @@ const AllCourse = () => {
         </Link>
       ),
     },
+     {
+      field: "  ",
+      headerName: "Users",
+      flex: 0.2,
+      renderCell: (params: any) => (
+        <Link
+          href={`/teacher/users-course/${params.row.id}`}
+          className="flex items-center justify-center w-full h-full"
+          style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+        >
+          <FiEdit2
+            className={`${theme === "dark" ? "text-white" : "text-black"}`}
+          />
+        </Link>
+      ),
+    },
     {
       field: " ",
       headerName: "Delete",

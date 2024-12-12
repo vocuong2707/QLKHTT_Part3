@@ -5,23 +5,28 @@ import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import Loader from "../../Loader/Loader";
 import { format } from "timeago.js";
-import { useDeleteUsersMutation, useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import { useDeleteUsersMutation, useGetAllUsersQuery,useGetAllUserByCourseMutation } from "@/redux/features/user/userApi";
 import { Style } from "@/app/style/stylelogin";
 import toast from "react-hot-toast";
 
 
 type Props = {
-};
+id:String};
 
-const AllUsers:FC<Props> = ({props}) => {
+const AllUsers:FC<Props> = ({id}) => async{
   const { theme } = useTheme();
-  const { isLoading, data, error ,refetch} = useGetAllUsersQuery({},{refetchOnMountOrArgChange: true});
   const [userId, setUserID] = useState("");
   const [open, setOpen] = useState(false);
-  const [deleteUser, { isSuccess, error: deleteError }] = useDeleteUsersMutation();  
+  const [deleteUser,{ isSuccess, error: deleteError }] = useDeleteUsersMutation();  
+  const [getAlluser,{ isSuccessUsers, error: getAllUsersError }] = useGetAllUsersQuery();  
+
+  const [getUsersByCourse, { isSuccess:success, error: getUsersError }] = useGetAllUserByCourseMutation();  
 
   const [rows, setRows] = useState<any[]>([]);
-
+  await getUsersByCourse(id);
+  console.log('====================================');
+  console.log(data);
+  console.log('====================================');
   useEffect(() => {
     if (data?.users && Array.isArray(data.users)) {
       const newRows = data.users.map((item: any) => ({

@@ -75,8 +75,11 @@ const EditCourse:FC<Props> = ({id}) => {
         },
       ],
       suggestion: "",
+      assignmentFile:""
     },
   ]);
+
+  
 
   const [courseData, setCourseData] = useState({});
 
@@ -102,6 +105,8 @@ const EditCourse:FC<Props> = ({id}) => {
         url: link.url,
       })),
       suggestion: courseContent.suggestion,
+      assignmentFile:courseContent.assignmentFile,
+
     }));
   
     // Prepare our data object
@@ -120,6 +125,8 @@ const EditCourse:FC<Props> = ({id}) => {
       prerequisites: formattedPrerequisites,
       courseData: formattedCourseContentData,
     };
+
+    
   
     // Update courseData state
     setCourseData(data);  // Cập nhật courseData trước khi gửi
@@ -133,7 +140,7 @@ const EditCourse:FC<Props> = ({id}) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Course Update successfully");
-      redirect("/admin/courses");
+      redirect("/teacher/courses");
     }
     if (error) {
       if ("data" in error) {

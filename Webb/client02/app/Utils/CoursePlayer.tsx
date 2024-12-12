@@ -11,7 +11,8 @@ const CoursePlayer: FC<Props> = ({ videoUrl }) => {
         otp: "",
         playbackInfo: "",
     });
-
+    console.log("Video Url: " , videoUrl);
+    
     useEffect(() => {
         // if (videoUrl.includes("localhost:8000")) {
         //     axios.post("http://localhost:8000/api/v1/getVdoCipherOTP", {
@@ -29,38 +30,20 @@ const CoursePlayer: FC<Props> = ({ videoUrl }) => {
 
     return (
         <div style={{ paddingTop: "41%", position: "relative" }}>
-            {videoUrl ? (
                 <video
-                    controls
-                    style={{
-                        width: "80%",
-                        height: "100%",
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                    }}
-                >
-                    <source src={videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
-            ) : (
-                videoData.otp && videoData.playbackInfo !== "" && (
-                    <iframe
-                        src={`https://player.vdocipher.com/v2/?otp=${videoData?.otp}&playbackInfo=${videoData.playbackInfo}&player=0ZSsAY6mVY8IfE6n`}
-                        style={{
-                            border: 0,
-                            width: "100%",
-                            height: "100%",
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                        }}
-                        allowFullScreen={true}
-                        allow="encrypted-media"
-                    >
-                    </iframe>
-                )
-            )}
+    key={videoUrl} // Thêm key để buộc component render lại
+    controls
+    style={{
+        width: "80%",
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        left: 0,
+    }}
+>
+    <source src={videoUrl} type="video/mp4" />
+    Your browser does not support the video tag.
+</video>
         </div>
     );
 }
